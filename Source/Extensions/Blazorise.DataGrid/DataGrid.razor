@@ -194,10 +194,12 @@
     @if ( editItem != null && EditMode == DataGridEditMode.Popup )
     {
         <_DataGridModal TItem="TItem"
+                        TitleTemplate="@PopupTitleTemplate"
                         EditItem="@editItem"
                         EditItemCellValues="@editItemCellValues"
                         Columns="@Columns"
                         PopupVisible="@PopupVisible"
+                        PopupSize="@PopupSize"
                         EditState="@editState"
                         Save="@OnSaveCommand"
                         Cancel="@OnCancelCommand" />

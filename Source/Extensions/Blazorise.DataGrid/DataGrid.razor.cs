@@ -166,7 +166,11 @@ namespace Blazorise.DataGrid
 
         protected void OnNewCommand()
         {
-            InitEditItem( CreateNewItem() );
+            var newItem = CreateNewItem();
+
+            NewItemDefaultSetter?.Invoke( newItem );
+
+            InitEditItem( newItem );
 
             editState = DataGridEditState.New;
 
@@ -589,9 +593,26 @@ namespace Blazorise.DataGrid
         public DataGridEditState EditState => editState;
 
         /// <summary>
+        /// Gets template for title of popup modal.
+        /// </summary>
+        [Parameter]
+        public RenderFragment<PopupTitleContext<TItem>> PopupTitleTemplate { get; set; } = context =>
+        {
+            return builder =>
+            {
+                builder.AddContent( 0, context.EditState == DataGridEditState.Edit ? "Row Edit" : "Row Create" );
+            };
+        };
+
+        /// <summary>
         /// Gets the flag which indicates if popup editor is visible.
         /// </summary>
         protected bool PopupVisible = false;
+
+        /// <summary>
+        /// Defines the size of popup dialog.
+        /// </summary>
+        [Parameter] public ModalSize PopupSize { get; set; } = ModalSize.Default;
 
         /// <summary>
         /// Gets the reference to the associated command column.
@@ -887,6 +908,11 @@ namespace Blazorise.DataGrid
         /// Template for displaying detail or nested row.
         /// </summary>
         [Parameter] public RenderFragment<TItem> DetailRowTemplate { get; set; }
+
+        /// <summary>
+        /// Function, that is called, when a new item is created for inserting new entry.
+        /// </summary>
+        [Parameter] public Action<TItem> NewItemDefaultSetter { get; set; }
 
         /// <summary>
         /// Adds stripes to the table.
